@@ -3,6 +3,7 @@ package com.greenfox.backend.entity;
 import com.greenfox.backend.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,20 +19,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
+    private String fullName; // now nullable by default
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = true) // changed: allows null for OTP login users
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = true) // changed: optional for OTP login users
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role; // CLIENT or PARTNER
+    private Role role;
 
     @Column(nullable = false)
     private Boolean isVerified = false;

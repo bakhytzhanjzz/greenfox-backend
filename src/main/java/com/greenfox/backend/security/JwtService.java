@@ -28,8 +28,9 @@ public class JwtService {
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 hours
 
     public String generateToken(User user) {
+        String subject = user.getEmail() != null ? user.getEmail() : user.getPhoneNumber();
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(subject)
                 .claim("role", user.getRole().name())
                 .claim("id", user.getId())
                 .setIssuedAt(new Date())

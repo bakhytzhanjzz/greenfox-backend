@@ -26,7 +26,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getEmail(); // Spring treats this as the unique login identifier
+        return user.getEmail() != null ? user.getEmail() : user.getPhoneNumber();
     }
 
     @Override

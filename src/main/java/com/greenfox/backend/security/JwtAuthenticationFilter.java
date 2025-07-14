@@ -39,10 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);
+        System.out.println("Subject in token: " + username);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             var user = userRepository.findByEmail(username)
+                    .or(() -> userRepository.findByPhoneNumber(username))
                     .orElse(null);
+            System.out.println("User matched: " + (user != null));
 
             if (user != null && jwtService.isTokenValid(jwt, new CustomUserDetails(user))) {
                 var authToken = new UsernamePasswordAuthenticationToken(

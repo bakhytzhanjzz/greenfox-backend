@@ -1,8 +1,6 @@
 package com.greenfox.backend.controller;
 
-import com.greenfox.backend.dto.auth.AuthResponse;
-import com.greenfox.backend.dto.auth.LoginRequest;
-import com.greenfox.backend.dto.auth.RegisterRequest;
+import com.greenfox.backend.dto.auth.*;
 import com.greenfox.backend.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,5 +22,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @PostMapping("/request-otp")
+    public ResponseEntity<String> requestOtp(@Valid @RequestBody OtpRequest request) {
+        authService.requestOtp(request);
+        return ResponseEntity.ok("OTP sent (mocked)");
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<AuthResponse> verifyOtp(@Valid @RequestBody OtpVerifyRequest request) {
+        return ResponseEntity.ok(authService.verifyOtp(request));
     }
 }
