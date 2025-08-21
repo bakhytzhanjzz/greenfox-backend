@@ -10,5 +10,6 @@ public interface UserMapper {
 
     UserDto toDto(User user);
 
+    @Mapping(target = "role", ignore = true) // иначе MapStruct ругается
     User fromCreateDto(UserCreateDto dto);
 }

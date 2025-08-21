@@ -13,7 +13,7 @@ CREATE TABLE users (
 -- Курорты
 CREATE TABLE resorts (
                          id BIGSERIAL PRIMARY KEY,
-                         owner_id BIGINT NOT NULL REFERENCES users(id),
+                         owner_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                          name VARCHAR(200) NOT NULL,
                          description TEXT,
                          location VARCHAR(200) NOT NULL,
@@ -33,13 +33,15 @@ CREATE TABLE resorts (
 -- Картинки курорта
 CREATE TABLE resort_images (
                                resort_id BIGINT NOT NULL REFERENCES resorts(id) ON DELETE CASCADE,
-                               image_url VARCHAR(1000) NOT NULL
+                               image_url VARCHAR(1000) NOT NULL,
+                               PRIMARY KEY (resort_id, image_url)
 );
 
 -- Удобства курорта
 CREATE TABLE resort_amenities (
                                   resort_id BIGINT NOT NULL REFERENCES resorts(id) ON DELETE CASCADE,
-                                  amenity VARCHAR(50) NOT NULL
+                                  amenity VARCHAR(50) NOT NULL,
+                                  PRIMARY KEY (resort_id, amenity)
 );
 
 -- Доступные даты
@@ -56,8 +58,8 @@ CREATE TABLE resort_availability (
 -- Бронирования
 CREATE TABLE bookings (
                           id BIGSERIAL PRIMARY KEY,
-                          resort_id BIGINT NOT NULL REFERENCES resorts(id),
-                          user_id BIGINT NOT NULL REFERENCES users(id),
+                          resort_id BIGINT NOT NULL REFERENCES resorts(id) ON DELETE CASCADE,
+                          user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                           check_in_date DATE NOT NULL,
                           check_out_date DATE NOT NULL,
                           guests INT NOT NULL,
@@ -71,9 +73,9 @@ CREATE TABLE bookings (
 -- Отзывы
 CREATE TABLE reviews (
                          id BIGSERIAL PRIMARY KEY,
-                         user_id BIGINT NOT NULL REFERENCES users(id),
-                         resort_id BIGINT NOT NULL REFERENCES resorts(id),
-                         rating INT NOT NULL,
+                         user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                         resort_id BIGINT NOT NULL REFERENCES resorts(id) ON DELETE CASCADE,
+                         rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
                          comment VARCHAR(2000),
                          created_at TIMESTAMP NOT NULL DEFAULT now(),
                          updated_at TIMESTAMP NOT NULL DEFAULT now()
@@ -82,8 +84,8 @@ CREATE TABLE reviews (
 -- Избранные
 CREATE TABLE favorites (
                            id BIGSERIAL PRIMARY KEY,
-                           user_id BIGINT NOT NULL REFERENCES users(id),
-                           resort_id BIGINT NOT NULL REFERENCES resorts(id),
+                           user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                           resort_id BIGINT NOT NULL REFERENCES resorts(id) ON DELETE CASCADE,
                            created_at TIMESTAMP NOT NULL DEFAULT now(),
                            updated_at TIMESTAMP NOT NULL DEFAULT now(),
                            UNIQUE(user_id, resort_id)

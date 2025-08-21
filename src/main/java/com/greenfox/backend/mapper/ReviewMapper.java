@@ -12,8 +12,9 @@ public interface ReviewMapper {
     @Mapping(source = "resort.id", target = "resortId")
     ReviewDto toDto(Review review);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "resort", ignore = true)
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "rating", source = "rating")
+    @Mapping(target = "comment", source = "comment")
     Review fromCreateDto(ReviewCreateDto dto);
 }
+

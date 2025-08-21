@@ -12,8 +12,6 @@ public interface FavoriteMapper {
     @Mapping(source = "resort.id", target = "resortId")
     FavoriteDto toDto(Favorite favorite);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "resort", ignore = true)
+    @BeanMapping(ignoreByDefault = true)
     Favorite fromCreateDto(FavoriteCreateDto dto);
 }

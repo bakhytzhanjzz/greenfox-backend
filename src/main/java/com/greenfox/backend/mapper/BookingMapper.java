@@ -10,13 +10,12 @@ public interface BookingMapper {
 
     @Mapping(source = "resort.id", target = "resortId")
     @Mapping(source = "user.id", target = "userId")
-    @Mapping(source = "status", target = "status")
     BookingDto toDto(Booking booking);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "resort", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "totalPrice", ignore = true)
-    @Mapping(target = "status", ignore = true)
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "checkInDate", source = "checkInDate")
+    @Mapping(target = "checkOutDate", source = "checkOutDate")
+    @Mapping(target = "guests", source = "guests")
+    @Mapping(target = "specialRequests", source = "specialRequests")
     Booking fromCreateDto(BookingCreateDto dto);
 }
