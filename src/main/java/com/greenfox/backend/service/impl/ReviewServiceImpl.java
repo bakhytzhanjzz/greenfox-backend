@@ -7,6 +7,7 @@ import com.greenfox.backend.repository.ReviewRepository;
 import com.greenfox.backend.repository.ResortRepository;
 import com.greenfox.backend.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final ResortRepository resortRepository;
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.canManageBooking(authentication, #bookingId)")
     @Override
     @Transactional
     public Review addReview(User user, Resort resort, int rating, String comment) {

@@ -5,6 +5,7 @@ import com.greenfox.backend.entity.User;
 import com.greenfox.backend.repository.ResortRepository;
 import com.greenfox.backend.service.ResortService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ public class ResortServiceImpl implements ResortService {
 
     private final ResortRepository resortRepository;
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PARTNER')")
     @Override
     @Transactional
     public Resort createResort(User owner, Resort resort) {
@@ -24,6 +26,7 @@ public class ResortServiceImpl implements ResortService {
         return resortRepository.save(resort);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.canManageResort(authentication, #resortId)")
     @Override
     @Transactional
     public Resort updateResort(Long resortId, Resort updated) {
@@ -38,6 +41,7 @@ public class ResortServiceImpl implements ResortService {
         return resortRepository.save(existing);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.canManageResort(authentication, #resortId)")
     @Override
     @Transactional
     public void deleteResort(Long resortId, User owner) {

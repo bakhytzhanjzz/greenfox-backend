@@ -51,4 +51,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleGeneric(Exception ex, HttpServletRequest req) {
         return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex.getMessage(), req.getRequestURI(), null);
     }
+
+    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleDenied(org.springframework.security.access.AccessDeniedException ex,
+                                                 HttpServletRequest req) {
+        return buildError(HttpStatus.FORBIDDEN, "Forbidden", ex.getMessage(), req.getRequestURI(), null);
+    }
+
 }

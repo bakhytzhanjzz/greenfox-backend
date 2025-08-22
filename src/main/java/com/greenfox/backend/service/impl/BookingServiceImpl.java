@@ -9,6 +9,7 @@ import com.greenfox.backend.repository.BookingRepository;
 import com.greenfox.backend.repository.ResortAvailabilityRepository;
 import com.greenfox.backend.service.BookingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final ResortAvailabilityRepository availabilityRepository;
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.isSelf(authentication, #user.id)")
     @Override
     @Transactional
     public Booking createBooking(User user, Resort resort, LocalDate checkIn, LocalDate checkOut, int guests) {
@@ -56,6 +58,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.save(booking);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.canManageBooking(authentication, #bookingId)")
     @Override
     @Transactional
     public void cancelBooking(Long bookingId, User user) {

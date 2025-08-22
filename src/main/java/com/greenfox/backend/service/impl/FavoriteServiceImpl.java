@@ -6,6 +6,7 @@ import com.greenfox.backend.entity.User;
 import com.greenfox.backend.repository.FavoriteRepository;
 import com.greenfox.backend.service.FavoriteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ public class FavoriteServiceImpl implements FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.canManageBooking(authentication, #bookingId)")
     @Override
     @Transactional
     public Favorite addFavorite(User user, Resort resort) {
@@ -26,6 +28,7 @@ public class FavoriteServiceImpl implements FavoriteService {
                 ));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @sec.canManageBooking(authentication, #bookingId)")
     @Override
     @Transactional
     public void removeFavorite(User user, Resort resort) {
