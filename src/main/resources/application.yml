@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://dpg-d3ca538gjchc73918nkg-a:5432/greenfox_db  # Internal DB URL
-    username: greenfox_db_user
-    password: I5RvshR1jiRXbHYLjsISPeLWYWnYl68P
+    url: jdbc:postgresql://dpg-d3cplefdiees7386b67g-a:5432/greenfox_db_w1vy  # Internal DB URL
+    username: greenfox_db_w1vy_user
+    password: E7tSsGttgc34362OfLJZ6HgYviB0qOyd
     driver-class-name: org.postgresql.Driver
 
   jpa:
