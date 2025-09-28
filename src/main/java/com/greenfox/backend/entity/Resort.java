@@ -4,10 +4,9 @@ import com.greenfox.backend.entity.embeddable.ContactInfo;
 import com.greenfox.backend.entity.embeddable.Coordinates;
 import com.greenfox.backend.entity.enums.Amenity;
 import jakarta.persistence.*;
-        import jakarta.validation.constraints.*;
-        import lombok.*;
-
-        import java.math.BigDecimal;
+import jakarta.validation.constraints.*;
+import lombok.*;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 

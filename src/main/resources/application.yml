@@ -1,19 +1,19 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/resort_booking
-    username: postgres
-    password: 1234
+    url: jdbc:postgresql://dpg-d3ca538gjchc73918nkg-a:5432/greenfox_db  # Internal DB URL
+    username: greenfox_db_user
+    password: I5RvshR1jiRXbHYLjsISPeLWYWnYl68P
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # Let Hibernate auto-update the schema
     flyway:
-      enabled: true
+      enabled: true  # Enable Flyway migrations if you're using them
 
   data:
     redis:
-      host: localhost
+      host: greenfox-redis  # Replace with the internal Redis hostname
       port: 6379
 
 logging:
