@@ -11,6 +11,7 @@ import com.greenfox.backend.service.ResortService;
 import com.greenfox.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -26,38 +27,53 @@ public class BookingController {
     private final ResortService resortService;
     private final BookingMapper bookingMapper;
 
-    @PostMapping("/user/{userId}")
+    // ✅ Create booking for the current authenticated user
+    @PostMapping
     public ResponseEntity<BookingDto> create(
-            @PathVariable Long userId,
-            @Valid @RequestBody BookingCreateDto dto) {
-        User user = userService.getById(userId);
+            @Valid @RequestBody BookingCreateDto dto,
+            Authentication authentication) {
+        User user = userService.getCurrentUser(authentication);
         Resort resort = resortService.getResortById(dto.getResortId());
-        Booking booking = bookingService.createBooking(user, resort, dto.getCheckInDate(), dto.getCheckOutDate(), dto.getGuests());
+
+        Booking booking = bookingService.createBooking(
+                user,
+                resort,
+                dto.getCheckInDate(),
+                dto.getCheckOutDate(),
+                dto.getGuests()
+        );
+        booking.setSpecialRequests(dto.getSpecialRequests());
+
         return ResponseEntity.ok(bookingMapper.toDto(booking));
     }
 
-    @PostMapping("/{bookingId}/cancel/user/{userId}")
-    public ResponseEntity<Void> cancel(@PathVariable Long bookingId, @PathVariable Long userId) {
-        User user = userService.getById(userId);
+    // ✅ Cancel booking for the current user
+    @PostMapping("/{bookingId}/cancel")
+    public ResponseEntity<Void> cancel(@PathVariable Long bookingId, Authentication authentication) {
+        User user = userService.getCurrentUser(authentication);
         bookingService.cancelBooking(bookingId, user);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<BookingDto>> getForUser(@PathVariable Long userId) {
-        User user = userService.getById(userId);
+    // ✅ Get bookings of the current user
+    @GetMapping("/me")
+    public ResponseEntity<List<BookingDto>> getMyBookings(Authentication authentication) {
+        User user = userService.getCurrentUser(authentication);
         return ResponseEntity.ok(
                 bookingService.getBookingsForUser(user).stream()
-                        .map(bookingMapper::toDto).toList()
+                        .map(bookingMapper::toDto)
+                        .toList()
         );
     }
 
+    // ✅ Keep endpoint for partner/admin to view resort bookings
     @GetMapping("/resort/{resortId}")
     public ResponseEntity<List<BookingDto>> getForResort(@PathVariable Long resortId) {
         Resort resort = resortService.getResortById(resortId);
         return ResponseEntity.ok(
                 bookingService.getBookingsForResort(resort).stream()
-                        .map(bookingMapper::toDto).toList()
+                        .map(bookingMapper::toDto)
+                        .toList()
         );
     }
 }

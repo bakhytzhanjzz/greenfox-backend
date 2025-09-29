@@ -7,7 +7,9 @@ import com.greenfox.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
@@ -59,5 +61,12 @@ public class UserServiceImpl implements UserService {
         if (email != null) user.setEmail(email);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public User getCurrentUser(Authentication authentication) {
+        String phoneNumber = authentication.getName(); // subject in JWT = phone number
+        return userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Authenticated user not found"));
     }
 }
