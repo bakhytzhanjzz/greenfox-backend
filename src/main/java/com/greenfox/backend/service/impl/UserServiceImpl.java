@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)
-                .role(UserRole.CLIENT) // по умолчанию клиент, партнёр создаётся отдельно
+                .role(UserRole.CLIENT) // default role
                 .build();
 
         return userRepository.save(user);
@@ -43,5 +43,21 @@ public class UserServiceImpl implements UserService {
     public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
+    @Override
+    @Transactional
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User updateUserProfile(User user, String firstName, String lastName, String email) {
+        if (firstName != null) user.setFirstName(firstName);
+        if (lastName != null) user.setLastName(lastName);
+        if (email != null) user.setEmail(email);
+
+        return userRepository.save(user);
     }
 }

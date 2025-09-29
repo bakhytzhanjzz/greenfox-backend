@@ -7,6 +7,7 @@ import com.greenfox.backend.mapper.UserMapper;
 import com.greenfox.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -21,7 +22,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> register(@Valid @RequestBody UserCreateDto dto) {
-        User user = userService.registerUser(dto.getPhoneNumber(), dto.getFirstName(), dto.getLastName(), dto.getEmail());
+        User user = userService.registerUser(
+                dto.getPhoneNumber(),
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getEmail()
+        );
         return ResponseEntity.ok(userMapper.toDto(user));
     }
 
@@ -36,5 +42,31 @@ public class UserController {
                 .map(userMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 🔹 New endpoint: current user profile
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getCurrentUser(Authentication authentication) {
+        String phoneNumber = authentication.getName();
+
+        return userService.findByPhoneNumber(phoneNumber)
+                .map(userMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 🔹 New endpoint: update current user profile
+    @PutMapping("/me")
+    public ResponseEntity<UserDto> updateCurrentUser(
+            Authentication authentication,
+            @Valid @RequestBody UserCreateDto dto) {
+
+        String phoneNumber = authentication.getName();
+
+        User user = userService.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        User updated = userService.updateUserProfile(user, dto.getFirstName(), dto.getLastName(), dto.getEmail());
+        return ResponseEntity.ok(userMapper.toDto(updated));
     }
 }
