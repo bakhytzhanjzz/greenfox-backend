@@ -1,7 +1,6 @@
 package com.greenfox.backend.dto;
 
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -9,6 +8,7 @@ import java.time.LocalDate;
 public class BookingDto {
     private Long id;
     private Long resortId;
+    private String resortName;  
     private Long userId;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
@@ -17,4 +17,3 @@ public class BookingDto {
     private String status;
     private String specialRequests;
 }
-

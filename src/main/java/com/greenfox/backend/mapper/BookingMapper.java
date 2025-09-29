@@ -9,6 +9,7 @@ import org.mapstruct.*;
 public interface BookingMapper {
 
     @Mapping(source = "resort.id", target = "resortId")
+    @Mapping(source = "resort.name", target = "resortName") // ✅ added
     @Mapping(source = "user.id", target = "userId")
     BookingDto toDto(Booking booking);
 
